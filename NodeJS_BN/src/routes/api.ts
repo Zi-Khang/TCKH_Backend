@@ -18,6 +18,8 @@ router.post('/login', UserController.loginUser);
 
 router.post('/createArticle', upload.single('content'), ArticleController.createArticle);
 
+router.get('/getArticle', ArticleController.getListArticles);
+
 // routerAPI.post('/article/', loadArticle);
 
 

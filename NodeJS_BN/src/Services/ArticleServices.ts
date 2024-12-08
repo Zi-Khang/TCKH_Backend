@@ -1,5 +1,6 @@
 import { ObjectId } from "mongoose";
 import { EStatusArticle } from "../types";
+import ArticleRepository from "../Repository/ArticleRepository";
 
 const newArticle = async (
     title: string,
@@ -18,6 +19,52 @@ const newArticle = async (
     };
 };
 
+const allArticleFilterStatus = async ({
+    page,
+    limit,
+    status,
+}: {
+    page: number;
+    limit: number;
+    status?: EStatusArticle;
+}) => {
+    const findArticles = await ArticleRepository.findArticlesByStatus(
+        page,
+        limit,
+        status
+    );
+    const [
+        countPending,
+        countAssigning,
+        countReviewing,
+        countRevisioning,
+        countComplete,
+        countPublic,
+        countReject,
+    ] = await Promise.all([
+        ArticleRepository.sumCountAllArticle(EStatusArticle.PENDING),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.ASSIGNING),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.REVIEWING),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.REVISIONING),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.COMPLETE),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.PUBLIC),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.REJECT),
+    ]);
+    return {
+        articles: findArticles,
+        counts: {
+            pending: countPending,
+            assigning: countAssigning,
+            reviewing: countReviewing,
+            revisioning: countRevisioning,
+            complete: countComplete,
+            public: countPublic,
+            reject: countReject,
+        },
+    };
+};
+
 export default {
     newArticle,
+    allArticleFilterStatus,
 };

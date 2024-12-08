@@ -9,8 +9,13 @@ export enum ERoleUser {
 
 export enum EStatusArticle {
     PENDING = 1,
-    REVIEW = 2,
-    REJECT = 3,
+    ASSIGNING = 2,
+    REVIEWING = 3,
+    REVISIONING = 4,
+    COMPLETE = 5,
+    PUBLIC = 6,
+    REJECT = 7,
+
 }
 
 export enum EStatusReview {

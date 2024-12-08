@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import ArticleServices from '../Services/ArticleServices';
 import ArticleRepository from '../Repository/ArticleRepository';
 import ProcessServices from '../Services/ProcessServices';
+import { EStatusArticle } from '../types';
 
 interface ReqBodyArticle {
     title: string;
@@ -49,6 +50,30 @@ const createArticle = async (req: Request, res: Response, next: NextFunction): P
     }
 };
 
+const getListArticles = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { page, limit, status } = req.query as {
+            page?: number;
+            limit?: number;
+            status?: EStatusArticle;
+        };
+        const pageNumber = page || 1;
+        const pageSize = limit || 10;
+        const find = await ArticleServices.allArticleFilterStatus({
+            page: pageNumber,
+            limit: pageSize,
+            status: status,
+        });
+        res.status(200).json({
+            articles: find.articles,
+            counts: find.counts,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+};
+
 export default {
     createArticle,
+    getListArticles,
 };
