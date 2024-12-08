@@ -5,15 +5,13 @@ import mongoose, { Schema, model } from "mongoose";
 const reviewAssignmentSchema = new Schema({
     reviewerID:
     {
-        type: Number, ref: 'User', required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     articleID:
     {
-        type: Number, ref: 'Article', required: true
-    },
-    editorID:
-    {
-        type: Number, ref: 'User'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Article'
     },
     status:
     {

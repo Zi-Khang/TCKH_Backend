@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import Article from "../models/Article";
 import { EStatusArticle } from "../types";
 
@@ -6,6 +7,31 @@ const saveArticle = async (article: Object) => {
     const res = await new Article(article).save();
     return res;
 };
+
+const updateStatusArticle = async (articleID: ObjectId, status: EStatusArticle) => {
+    try {
+        const updatedArticle = await Article.findByIdAndUpdate(
+            articleID,                       
+            { 
+                status: status 
+            },             
+            { 
+                new: true, 
+                runValidators: true 
+            } 
+        );
+
+        if (!updatedArticle) {
+            throw new Error(`Article with ID ${articleID} not found`);
+        }
+
+        return updatedArticle; 
+    } catch (error) {
+        console.error("Error updating article status:", error);
+        throw error; 
+    }
+};
+
 
 const findArticlesByStatus = async (
     page: number,
@@ -53,5 +79,6 @@ const sumCountAllArticle = async (status: EStatusArticle) => {
 export default {
     saveArticle,
     findArticlesByStatus,
-    sumCountAllArticle
+    sumCountAllArticle,
+    updateStatusArticle
 }

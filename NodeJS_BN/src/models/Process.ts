@@ -7,6 +7,26 @@ const processSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Article'
     },
+    authorID: 
+    { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    reviewerID: 
+    { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    publicerID: 
+    { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    editorID: 
+    { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     time: 
     { 
         type: Date 

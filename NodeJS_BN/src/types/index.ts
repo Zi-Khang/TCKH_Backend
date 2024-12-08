@@ -15,7 +15,6 @@ export enum EStatusArticle {
     COMPLETE = 5,
     PUBLIC = 6,
     REJECT = 7,
-
 }
 
 export enum EStatusReview {
