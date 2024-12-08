@@ -1,5 +1,7 @@
 import express, { Router } from "express";
-import { UserController } from "../controllers";
+import upload from '../configs/cloudinary'; 
+import { UserController, ArticleController } from "../controllers";
+
 // const routerAPI = express.Router();
 // const { auth } = require('../middleware/auth');
 // const multer = require('multer');
@@ -14,7 +16,7 @@ router.post('/register', UserController.createUser);
 
 router.post('/login', UserController.loginUser);
 
-// routerAPI.post('/createArticle', upload.single('contentData'), createArticle);
+router.post('/createArticle', upload.single('content'), ArticleController.createArticle);
 
 // routerAPI.post('/article/', loadArticle);
 
