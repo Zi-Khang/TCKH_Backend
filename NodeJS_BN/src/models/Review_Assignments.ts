@@ -6,12 +6,14 @@ const reviewAssignmentSchema = new Schema({
     reviewerID:
     {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true,
     },
     articleID:
     {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article'
+        ref: 'Article',
+        require: true,
     },
     status:
     {
