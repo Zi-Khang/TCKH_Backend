@@ -23,7 +23,7 @@ router.post('/viewAssignmentList', ReviewAssignments.viewAssignmentList);
 
 router.post('/chooseAssignment', ReviewAssignments.chooseAssignments); 
 
-
+router.get('/getMyArticle', ArticleController.getMyArticle);
 
 
 

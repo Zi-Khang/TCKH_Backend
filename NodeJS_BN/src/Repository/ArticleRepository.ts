@@ -36,6 +36,7 @@ const updateStatusArticle = async (articleID: ObjectId, status: EStatusArticle) 
 const findArticlesByStatus = async (
     page: number,
     limit: number,
+    authorID?: ObjectId,
     status?: EStatusArticle
 ) => {
     const skip = (page - 1) * limit;
@@ -43,6 +44,9 @@ const findArticlesByStatus = async (
     const filter: any = {};
     if (status) {
         filter.status = status;
+    }
+    if (authorID) {
+        filter.authorID = authorID;
     }
 
     const Articles = await Article
@@ -56,10 +60,8 @@ const findArticlesByStatus = async (
         })
         .sort({ updatedAt: -1 });
 
-    // Tính tổng số lượng đơn hàng
     const total = await Article.find(filter).countDocuments();
 
-    // Trả về kết quả
     return {
         data: Articles,
         currentPage: page,

@@ -73,7 +73,37 @@ const getListArticles = async (req: Request, res: Response, next: NextFunction):
     }
 };
 
+const getMyArticle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { page, limit, authorID, status } = req.query as {
+            page?: number;
+            limit?: number;
+            authorID?: ObjectId,
+            status?: EStatusArticle;
+        };
+        console.log(req.query);
+        
+        const pageNumber = page || 1;
+        const pageSize = limit || 10;
+        const find = await ArticleServices.allArticleFilterStatus({
+            page: pageNumber,
+            limit: pageSize,
+            authorID: authorID,
+            status: status,
+        });
+        res.status(200).json({
+            articles: find.articles,
+            counts: find.counts,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+};
+
+
+
 export default {
     createArticle,
     getListArticles,
+    getMyArticle
 };

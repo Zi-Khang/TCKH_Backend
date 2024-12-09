@@ -22,16 +22,19 @@ const newArticle = async (
 const allArticleFilterStatus = async ({
     page,
     limit,
+    authorID,
     status,
 }: {
     page: number;
     limit: number;
+    authorID?: ObjectId,
     status?: EStatusArticle;
 }) => {
     const findArticles = await ArticleRepository.findArticlesByStatus(
         page,
         limit,
-        status
+        authorID,
+        status,
     );
     const [
         countPending,
