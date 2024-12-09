@@ -12,7 +12,7 @@ const getListReviewrAvailable = async ({
     const { Reviewers: rejectedReviewers } = await ReviewAssignmentRepository.findReviewer(
         articleID,
     );
-    console.log(rejectedReviewers);
+    
     const rejectedReviewerIDs = rejectedReviewers
         .map(reviewer => reviewer.reviewerID)
         .filter((id): id is Types.ObjectId => id instanceof Types.ObjectId);
@@ -21,7 +21,7 @@ const getListReviewrAvailable = async ({
     const availableReviewers = await ReviewAssignmentRepository.findReviewersAvailable(
         rejectedReviewerIDs,
     );
-    console.log(availableReviewers);
+
     
 
     return {

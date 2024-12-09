@@ -9,10 +9,7 @@ const findReviewer = async (
 ) => {
     const filter: any = {};
 
-    
     filter.articleID = articleID;
-    // filter.status = EAssigment.REJECT;
-    console.log(filter);
     
     const Reviewers = await Review_Assignments
         .find(filter)
@@ -26,19 +23,23 @@ const findReviewersAvailable = async (
     rejectedReviewerIDs: Types.ObjectId[]
 ) => {
     const filter: any = {
-        _id: { $nin: rejectedReviewerIDs }, 
-        role: 2, 
+        role: 2, // Chỉ lấy người có vai trò reviewer (role: 2)
     };
+
+
+    if (rejectedReviewerIDs && rejectedReviewerIDs.length > 0) {
+        filter._id = { $in: rejectedReviewerIDs }; 
+    }
 
     const Reviewers = await User
         .find(filter)
         .select("reviewerID name"); 
 
-    
     return {
         Reviewers,
     };
 };
+
 const createAssign = async (
     articleID: ObjectId,
     reviewerID: ObjectId,

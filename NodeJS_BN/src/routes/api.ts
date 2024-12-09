@@ -27,6 +27,16 @@ router.get('/getMyArticle', ArticleController.getMyArticle);
 
 router.post('/sendReview', upload.single('contentReview'), ArticleController.updateArticleReview);
 
+// router.post(
+//     '/updateArticle',
+//     upload.fields([
+//       { name: 'image', maxCount: 1 }, 
+//       { name: 'content', maxCount: 1 },
+//     ]),
+//     ArticleController.updateImageAndContentArticlePublic
+//   );
+  
+
 
 
 export default router;
