@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 import Article from "../models/Article";
-import { EStatusArticle } from "../types";
+import { EDecision, EStatusArticle, EStatusReview } from "../types";
 
 
 const saveArticle = async (article: Object) => {
@@ -10,25 +10,26 @@ const saveArticle = async (article: Object) => {
 
 const updateStatusArticle = async (articleID: ObjectId, status: EStatusArticle) => {
     try {
+        console.log(articleID, status);
         const updatedArticle = await Article.findByIdAndUpdate(
-            articleID,                       
-            { 
-                status: status 
-            },             
-            { 
-                new: true, 
-                runValidators: true 
-            } 
+            articleID,
+            {
+                status: status
+            },
+            {
+                new: true,
+                runValidators: true
+            }
         );
 
         if (!updatedArticle) {
             throw new Error(`Article with ID ${articleID} not found`);
         }
 
-        return updatedArticle; 
+        return updatedArticle;
     } catch (error) {
         console.error("Error updating article status:", error);
-        throw error; 
+        throw error;
     }
 };
 
@@ -79,9 +80,41 @@ const sumCountAllArticle = async (status: EStatusArticle) => {
     return article;
 };
 
+const updateArticleReview = async (
+    articleID: ObjectId,
+    round: number,
+    reviewerID: ObjectId,
+    decision: EDecision,
+    contentUrl?: string,
+    comments?: string
+) => {
+    try {
+        const review = {
+            round,
+            reviewerID,
+            contentReview: contentUrl,
+            decision,
+            comments,
+        };
+
+        const article = Article.findByIdAndUpdate(
+            articleID,
+            {
+                $push: { reviews: review }, 
+            },
+            { new: true } 
+        );
+
+        return article;
+    } catch (error) {
+        return error;
+    }
+};
+
 export default {
     saveArticle,
     findArticlesByStatus,
     sumCountAllArticle,
-    updateStatusArticle
+    updateStatusArticle,
+    updateArticleReview
 }

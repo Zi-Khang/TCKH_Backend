@@ -28,11 +28,11 @@ const jwt = require("jsonwebtoken");
 const createUserServices = async (
     name: string, 
     email: string, 
-    Password: string,
+    password: string,
 ) => {
-    const password = await bcrypt.hash(Password, saltRounds)
+    const hashPassword = await bcrypt.hash(password, saltRounds)
     try {
-        const newUser = await User.create({ name, email, password });
+        const newUser = await User.create({ name, email, password: hashPassword });
         return newUser;
     } catch (error) {
         console.log('Error in createUser:', error);

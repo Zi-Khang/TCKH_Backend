@@ -51,6 +51,8 @@ const viewAssignmentList = async (req: Request, res: Response, next: NextFunctio
         const { reviewerID } = req.body as {
             reviewerID: ObjectId,
         };
+        if (!reviewerID)
+            return res.status(500).json("ReviewerId is required" );
         const find = await ReviewAssignmentServices.viewAssignmentList({
             reviewerID,
         });

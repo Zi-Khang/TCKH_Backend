@@ -9,8 +9,8 @@ export enum ERoleUser {
 
 export enum EStatusArticle {
     PENDING = 1,
-    ASSIGNING = 2,
-    REVIEWING = 3,
+    ASSIGNED = 2,
+    REVIEWED = 3,
     REVISIONING = 4,
     COMPLETE = 5,
     PUBLIC = 6,

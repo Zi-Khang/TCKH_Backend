@@ -44,12 +44,12 @@ const assignReviewer = async ({
     const note = 'Phân công phản biện';
     if (createAssign) {
         await ProcessServices.assignReviewerProcess(
-            articleID,  
+            articleID,
             reviewerID,
             time,
             note,       
         );
-        const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.ASSIGNING)
+        const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.ASSIGNED)
         if (updateArticle) {
             console.log('Thành công');
         }
@@ -100,7 +100,7 @@ const chooseAssignment = async ({
                 time,
                 'Chấp nhận phản biện',       
             );
-            const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVIEWING)
+            const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVIEWED)
         } else {
             await ProcessServices.assignReviewerProcess(
                 articleID,  

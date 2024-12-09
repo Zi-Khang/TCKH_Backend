@@ -1,11 +1,12 @@
-import { ObjectId } from "mongoose";
-import { EStatusArticle } from "../types";
+import { ObjectId, Types } from "mongoose";
+import { EDecision, EStatusArticle, EStatusReview } from "../types";
 import ArticleRepository from "../Repository/ArticleRepository";
+import ProcessServices from "./ProcessServices";
 
 const newArticle = async (
     title: string,
     abstract: string,
-    contentUrl: string, // Thay đổi từ File sang string
+    contentUrl: string,
     keywords: string[],
     authorID: ObjectId
 ) => {
@@ -46,8 +47,8 @@ const allArticleFilterStatus = async ({
         countReject,
     ] = await Promise.all([
         ArticleRepository.sumCountAllArticle(EStatusArticle.PENDING),
-        ArticleRepository.sumCountAllArticle(EStatusArticle.ASSIGNING),
-        ArticleRepository.sumCountAllArticle(EStatusArticle.REVIEWING),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.ASSIGNED),
+        ArticleRepository.sumCountAllArticle(EStatusArticle.REVIEWED),
         ArticleRepository.sumCountAllArticle(EStatusArticle.REVISIONING),
         ArticleRepository.sumCountAllArticle(EStatusArticle.COMPLETE),
         ArticleRepository.sumCountAllArticle(EStatusArticle.PUBLIC),
@@ -67,7 +68,39 @@ const allArticleFilterStatus = async ({
     };
 };
 
+const updateArticleReview = async (
+    articleID: ObjectId,
+    round: number,
+    reviewerID: ObjectId,
+    decision: EDecision,
+    contentUrl?: string,
+    comments?: string,
+) => {
+    const findArticles = await ArticleRepository.updateArticleReview(
+        articleID,
+        round,
+        reviewerID,
+        decision,
+        contentUrl,
+        comments,
+    );
+    if (findArticles) {
+        await ProcessServices.updateArticleReviewProccess(
+            articleID,
+            reviewerID,
+            new Date(),
+            'Đã Phản biện'
+        );
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVIEWED)
+    }
+    return {
+        article: findArticles,
+    };
+
+};
+
 export default {
     newArticle,
     allArticleFilterStatus,
+    updateArticleReview
 };

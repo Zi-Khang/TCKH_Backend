@@ -25,6 +25,8 @@ router.post('/chooseAssignment', ReviewAssignments.chooseAssignments);
 
 router.get('/getMyArticle', ArticleController.getMyArticle);
 
+router.get('/sendReview', upload.single('contentReview'), ArticleController.updateArticleReview);
+
 
 
 export default router;

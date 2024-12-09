@@ -58,7 +58,6 @@ const createAssign = async (
 const findAssignmentsList = async (
     reviewerID?: ObjectId
 ) => {
-
     const filter: any = {};
 
     filter.reviewerID = reviewerID,

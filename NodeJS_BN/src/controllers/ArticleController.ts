@@ -3,13 +3,20 @@ import { NextFunction, Request, Response } from "express";
 import ArticleServices from '../Services/ArticleServices';
 import ArticleRepository from '../Repository/ArticleRepository';
 import ProcessServices from '../Services/ProcessServices';
-import { EStatusArticle } from '../types';
+import { EDecision, EStatusArticle, EStatusReview } from '../types';
 
 interface ReqBodyArticle {
     title: string;
     abstract: string;
     keywords: string[];
     authorID: ObjectId;
+}
+interface ReqBodyReview {
+    articleID: ObjectId,
+    round: number,
+    reviewerID: ObjectId,
+    decision: EDecision,
+    comments?: string,
 }
 
 const createArticle = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -99,10 +106,43 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
     }
 };
 
+const updateArticleReview = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        console.log(req.body);
+        const { 
+            articleID,
+            round,
+            reviewerID,
+            decision,
+            comments,
+         } = req.body as ReqBodyReview;
+        
+
+        const contentUrl = req.file ? req.file.path : undefined;
+        console.log(contentUrl);
+
+
+        const newArticle = await ArticleServices.updateArticleReview(
+            articleID,
+            round,
+            reviewerID,
+            decision,
+            contentUrl,
+            comments,
+        );
+
+        return res.status(200).json('Phản biện thành công');
+    } catch (error) {
+        console.error('Error in createArticle:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
+
 
 
 export default {
     createArticle,
     getListArticles,
-    getMyArticle
+    getMyArticle,
+    updateArticleReview
 };

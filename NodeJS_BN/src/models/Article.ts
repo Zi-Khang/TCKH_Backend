@@ -14,13 +14,6 @@ const articleReviewSchema = new Schema({
     },
     contentReview: {
         type: String,
-        require: true,
-    },
-    status: {
-        type: Number,
-        enum: Object.values(EStatusReview).filter(
-            (value) => typeof value === "number"
-        ),
     },
     decision: {
         type: Number,
@@ -32,7 +25,7 @@ const articleReviewSchema = new Schema({
     comments: {
         type: String
     }
-}, { _id: false }); // Don't create a new _id for the subdocument
+}, { _id: false }); 
 
 const articleSchema = new Schema(
     {
@@ -48,7 +41,7 @@ const articleSchema = new Schema(
             required: true
         },
         keywords: {
-            type: [String], // Changed to string array to better represent keywords
+            type: [String],
         },
         status: {
             type: Number,
@@ -64,7 +57,7 @@ const articleSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'User'
         },
-        reviews: [articleReviewSchema] // Here we embed the reviews directly into the article
+        reviews: [articleReviewSchema]
     },
     configSchema
 );
