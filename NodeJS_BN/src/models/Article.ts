@@ -43,6 +43,12 @@ const articleSchema = new Schema(
         keywords: {
             type: [String],
         },
+        image: {
+            type: String,
+        },
+        contentPublic: {
+            type: String,
+        },
         status: {
             type: Number,
             enum: Object.values(EStatusArticle).filter(

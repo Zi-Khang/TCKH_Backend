@@ -138,6 +138,27 @@ const updateArticleReview = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
+// const updateImageAndContentArticlePublic = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+//     try {
+//         console.log(req.body);
+//         const { articleID } = req.body as { articleID: ObjectId } 
+        
+
+//         const contentUrl = req.file?.path;
+//         console.log(contentUrl);
+
+
+//         const newArticle = await ArticleServices.update(
+
+//         );
+
+//         return res.status(200).json('Phản biện thành công');
+//     } catch (error) {
+//         console.error('Error in createArticle:', error);
+//         return res.status(500).json({ message: 'Internal Server Error', error });
+//     }
+// };
+
 
 
 export default {
