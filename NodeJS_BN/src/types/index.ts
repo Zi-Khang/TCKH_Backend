@@ -32,7 +32,8 @@ export enum EGender {
 export enum EAssigment {
     PENDING = 1,
     ACCEPT = 2,
-    REJECT = 3,
+    REVISION = 2,
+    REJECT = 2,
 }
 
 export enum ENoti {

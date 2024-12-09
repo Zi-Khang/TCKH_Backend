@@ -1,7 +1,8 @@
 import { ObjectId, Types } from "mongoose";
-import { EDecision, EStatusArticle, EStatusReview } from "../types";
+import { EAssigment, EDecision, EStatusArticle, EStatusReview } from "../types";
 import ArticleRepository from "../Repository/ArticleRepository";
 import ProcessServices from "./ProcessServices";
+import ReviewAssignmentRepository from "../Repository/ReviewAssignmentRepository";
 
 const newArticle = async (
     title: string,
@@ -92,6 +93,12 @@ const updateArticleReview = async (
             'Đã Phản biện'
         );
         await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVIEWED)
+        if (decision == 1)
+            await ReviewAssignmentRepository.findAndUpdateReviewAssignment(reviewerID, articleID, EAssigment.ACCEPT)
+        else if (decision == 2)
+            await ReviewAssignmentRepository.findAndUpdateReviewAssignment(reviewerID, articleID, EAssigment.REVISION)
+        else
+            await ReviewAssignmentRepository.findAndUpdateReviewAssignment(reviewerID, articleID, EAssigment.REJECT)
     }
     return {
         article: findArticles,

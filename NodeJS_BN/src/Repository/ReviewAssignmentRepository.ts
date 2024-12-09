@@ -11,7 +11,7 @@ const findReviewer = async (
 
     
     filter.articleID = articleID;
-    filter.status = EAssigment.REJECT;
+    // filter.status = EAssigment.REJECT;
     console.log(filter);
     
     const Reviewers = await Review_Assignments
