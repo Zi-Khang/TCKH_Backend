@@ -19,7 +19,10 @@ router.post('/getListReviewersAvailable', ReviewAssignments.getReviewerList);
 
 router.post('/assignReviewer', ReviewAssignments.assignReviewer);
 
-// routerAPI.post('/article/', loadArticle);
+router.post('/viewAssignmentList', ReviewAssignments.viewAssignmentList); 
+
+router.post('/chooseAssignment', ReviewAssignments.chooseAssignments); 
+
 
 
 

@@ -2,7 +2,7 @@ import { ObjectId, Types } from "mongoose";
 import ReviewAssignmentRepository from "../Repository/ReviewAssignmentRepository";
 import ProcessServices from "./ProcessServices";
 import ArticleRepository from "../Repository/ArticleRepository";
-import { EStatusArticle } from "../types";
+import { EAssigment, EStatusArticle } from "../types";
 
 const getListReviewrAvailable = async ({
     articleID,
@@ -60,7 +60,66 @@ const assignReviewer = async ({
     };
 };
 
+const viewAssignmentList = async ({
+    reviewerID,
+}: {
+    reviewerID: ObjectId,
+}) => {
+    const Assignments = await ReviewAssignmentRepository.findAssignmentsList(
+        reviewerID,
+    );
+
+    return {
+        Assignments
+    };
+};
+
+const chooseAssignment = async ({
+    reviewerID,
+    articleID,
+    choose,
+}: {
+    reviewerID: ObjectId,
+    articleID: ObjectId,
+    choose: EAssigment,
+}) => {
+
+    const Assignments = await ReviewAssignmentRepository.findAndUpdateReviewAssignment
+    (
+        reviewerID,
+        articleID,
+        choose,
+    );
+    console.log(Assignments);
+    if (Assignments) {
+        const time = new Date();
+        if (choose == EAssigment.ACCEPT) {
+            await ProcessServices.assignReviewerProcess(
+                articleID,  
+                reviewerID,
+                time,
+                'Chấp nhận phản biện',       
+            );
+            const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVIEWING)
+        } else {
+            await ProcessServices.assignReviewerProcess(
+                articleID,  
+                reviewerID,
+                time,
+                'Từ chối phản biện',       
+            );
+            const updateArticle = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.PENDING)
+        }
+    }
+
+    return {
+        Assignments
+    };
+};
+
 export default {
     getListReviewrAvailable,
-    assignReviewer
+    assignReviewer,
+    viewAssignmentList,
+    chooseAssignment
 }
