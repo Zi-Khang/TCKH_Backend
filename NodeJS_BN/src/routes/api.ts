@@ -3,7 +3,7 @@ import upload from '../configs/cloudinary';
 import { UserController, ArticleController, ReviewAssignments } from "../controllers";
 
 const router = Router();
-// routerAPI.all("*", auth);
+
 
 
 

@@ -12,14 +12,13 @@ interface ReqBodyArticle {
     authorID: ObjectId;
 }
 
-const createArticle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const createArticle = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         console.log(req.body);
         const { title, abstract, keywords, authorID } = req.body as ReqBodyArticle;
 
         if (!req.file) {
-            res.status(400).json({ message: 'No file uploaded' });
-            return
+            return res.status(400).json({ message: 'No file uploaded' });
         }
         console.log(req.file.path);
         const contentUrl = req.file.path;
@@ -43,14 +42,14 @@ const createArticle = async (req: Request, res: Response, next: NextFunction): P
             );
         }
 
-        res.status(200).json(saveArticle);
+        return res.status(200).json(saveArticle);
     } catch (error) {
         console.error('Error in createArticle:', error);
-        res.status(500).json({ message: 'Internal Server Error', error });
+        return res.status(500).json({ message: 'Internal Server Error', error });
     }
 };
 
-const getListArticles = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getListArticles = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { page, limit, status } = req.query as {
             page?: number;
@@ -64,16 +63,16 @@ const getListArticles = async (req: Request, res: Response, next: NextFunction):
             limit: pageSize,
             status: status,
         });
-        res.status(200).json({
+        return res.status(200).json({
             articles: find.articles,
             counts: find.counts,
         });
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 
-const getMyArticle = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getMyArticle = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { page, limit, authorID, status } = req.query as {
             page?: number;
@@ -82,7 +81,7 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
             status?: EStatusArticle;
         };
         console.log(req.query);
-        
+
         const pageNumber = page || 1;
         const pageSize = limit || 10;
         const find = await ArticleServices.allArticleFilterStatus({
@@ -91,12 +90,12 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
             authorID: authorID,
             status: status,
         });
-        res.status(200).json({
+        return res.status(200).json({
             articles: find.articles,
             counts: find.counts,
         });
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 

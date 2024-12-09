@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongoose";
 import ReviewAssignmentServices from "../Services/ReviewAssignmentServices";
 import { EAssigment } from "../types";
+import { response, roundNumber } from "../helpers/index";
 
-
-const getReviewerList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getReviewerList = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { articleID } = req.body as {
             articleID: ObjectId,
@@ -12,20 +12,28 @@ const getReviewerList = async (req: Request, res: Response, next: NextFunction):
         const find = await ReviewAssignmentServices.getListReviewrAvailable({
             articleID,
         });
-        res.status(200).json({
+        return res.status(200).json({
             find
         });
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 
-const assignReviewer = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const assignReviewer = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { articleID, reviewerID } = req.body as {
             articleID: ObjectId,
             reviewerID: ObjectId,
         };
+        if (!articleID || !reviewerID)
+            return response({
+                res,
+                status: 404,
+                result: null,
+                message: "idUser and refresh token is required.",
+            })
+        console.log(1);
         const find = await ReviewAssignmentServices.assignReviewer({
             articleID,
             reviewerID,
@@ -34,11 +42,11 @@ const assignReviewer = async (req: Request, res: Response, next: NextFunction): 
             find
         });
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 
-const viewAssignmentList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const viewAssignmentList = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { reviewerID } = req.body as {
             reviewerID: ObjectId,
@@ -46,15 +54,15 @@ const viewAssignmentList = async (req: Request, res: Response, next: NextFunctio
         const find = await ReviewAssignmentServices.viewAssignmentList({
             reviewerID,
         });
-        res.status(200).json({
+        return res.status(200).json({
             find
         });
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 
-const chooseAssignments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const chooseAssignments = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { reviewerID, articleID, choose } = req.body as {
             reviewerID: ObjectId,
@@ -69,14 +77,14 @@ const chooseAssignments = async (req: Request, res: Response, next: NextFunction
         });
         if (find)
         {
-            res.status(200).json(
+            return res.status(200).json(
                 "Chọn thành công"
             );
         } else{
-            res.status(500).json("Lựa chọn thất bại");
+            return res.status(500).json("Lựa chọn thất bại");
         }
     } catch (error) {
-        res.status(500).json({ message: error });
+        return res.status(500).json({ message: error });
     }
 };
 

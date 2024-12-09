@@ -18,6 +18,10 @@ app.use(express.urlencoded({ extended: true }))
 definedRoutes(app)
 
 // app.use('/v1/api', webRouterAPI);
+app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+});
 
 const PORT = process.env.PORT || 8080;
 
