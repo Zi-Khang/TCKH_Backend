@@ -111,10 +111,35 @@ const updateArticleReview = async (
     }
 };
 
+const updateImageAndContent = async (
+    articleID: ObjectId,
+    publisherID: ObjectId,
+    imageUrl?: string,
+    contentUrl?: string,
+) => {
+    try {
+
+        const article = Article.findByIdAndUpdate(
+            articleID,
+            {
+                image: imageUrl,
+                contentPublic: contentUrl,
+                publisherID: publisherID,
+            },
+            { new: true } 
+        );
+
+        return article;
+    } catch (error) {
+        return error;
+    }
+};
+
 export default {
     saveArticle,
     findArticlesByStatus,
     sumCountAllArticle,
     updateStatusArticle,
-    updateArticleReview
+    updateArticleReview,
+    updateImageAndContent
 }

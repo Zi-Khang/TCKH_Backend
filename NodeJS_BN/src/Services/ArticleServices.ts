@@ -106,8 +106,36 @@ const updateArticleReview = async (
 
 };
 
+const updateImageAndContentPublic = async (
+    articleID: ObjectId,
+    publisherID: ObjectId,
+    imageUrl?: string,
+    contentUrl?: string,
+) => {
+    const findArticles = await ArticleRepository.updateImageAndContent(
+        articleID,
+        publisherID,
+        imageUrl,
+        contentUrl,
+    );
+    if (findArticles) {
+        await ProcessServices.updateArticlePublicProccess(
+            articleID,
+            publisherID,
+            new Date(),
+            'Đã xuất bản'
+        );
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.PUBLIC)
+    }
+    return {
+        article: findArticles,
+    };
+
+};
+
 export default {
     newArticle,
     allArticleFilterStatus,
-    updateArticleReview
+    updateArticleReview,
+    updateImageAndContentPublic
 };
