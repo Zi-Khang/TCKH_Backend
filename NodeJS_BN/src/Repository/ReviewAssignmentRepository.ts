@@ -68,7 +68,6 @@ const findAssignmentsList = async (
         .find(filter)
         .populate({
             path: "articleID",
-            select: "title abstract"
         })
         .select("-reviewerID -status -_id")
         .sort({ updatedAt: -1 });
