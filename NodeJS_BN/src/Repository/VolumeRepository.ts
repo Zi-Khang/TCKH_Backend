@@ -16,6 +16,15 @@ const createVolume = async (
     };
 };
 
+const getVolumeList = async () => {
+    const Volumes = await Volume.find({});
+    
+    return {
+        Volumes,
+    };
+};
+
 export default {
-    createVolume
+    createVolume,
+    getVolumeList
 }

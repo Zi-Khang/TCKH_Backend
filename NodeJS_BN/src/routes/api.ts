@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import upload from '../configs/cloudinary'; 
 import { UserController, ArticleController, ReviewAssignments } from "../controllers";
+import VolumeController from "../controllers/VolumeController";
 
 const router = Router();
 
@@ -36,7 +37,9 @@ router.post(
     ArticleController.updateImageAndContentArticlePublic
   );
   
+  router.post('/createVolume', VolumeController.createVolume);
 
+  router.get('/getVolumeList', VolumeController.getVolumeList);
 
 
 export default router;

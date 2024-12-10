@@ -23,8 +23,16 @@ const createVolume = async (
     };
 
 };
+const getVolumeList = async () => {
+    const listVolume = await VolumeRepository.getVolumeList();
+
+    return {
+        Volumes: listVolume,
+    };
+
+};
 
 export default {
     createVolume,
-    
+    getVolumeList
 }

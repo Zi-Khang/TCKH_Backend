@@ -7,7 +7,7 @@ import { EDecision, EStatusArticle, EStatusReview } from '../types';
 import Volume from '../models/Volume';
 import VolumeServices from '../Services/VolumeServices';
 
-const createUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+const createVolume = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { volumeNumber, volumeName, managerID } = req.body as {
             managerID: ObjectId,
@@ -27,5 +27,20 @@ const createUser = async (req: Request, res: Response, next: NextFunction): Prom
     }
 } 
 
+const getVolumeList = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const data = await VolumeServices.getVolumeList()
 
-export default 
+        if (data) {
+            return res.status(200).json(data);
+        }
+    } catch (error) {
+        return res.status(500).json({ EC: 1, EM: "Failed to create user" });
+    }
+} 
+
+
+export default {
+    createVolume,
+    getVolumeList
+}
