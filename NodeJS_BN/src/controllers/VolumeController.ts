@@ -1,10 +1,5 @@
 import { ObjectId, Types } from 'mongoose';
 import { NextFunction, Request, Response } from "express";
-import ArticleServices from '../Services/ArticleServices';
-import ArticleRepository from '../Repository/ArticleRepository';
-import ProcessServices from '../Services/ProcessServices';
-import { EDecision, EStatusArticle, EStatusReview } from '../types';
-import Volume from '../models/Volume';
 import VolumeServices from '../Services/VolumeServices';
 
 const createVolume = async (req: Request, res: Response, next: NextFunction): Promise<any> => {

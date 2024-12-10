@@ -5,7 +5,7 @@ import { EStatusArticle } from "../types";
 const JournalIssue = new Schema({
     volumeID: 
     { 
-        type: Schema.Types.ObjectId, 
+        type: Schema.Types.ObjectId,
         ref: 'Volume' 
     },
     issueNumber: 
