@@ -45,5 +45,7 @@ router.post(
   router.post('/createIssue', JournalIssues.createJournalIssue);
 
   router.post('/getIssueList', JournalIssues.getIssuesByVolume);
+  
+  router.post('/addArticle', JournalIssues.assignArticleToIssue);
 
 export default router;

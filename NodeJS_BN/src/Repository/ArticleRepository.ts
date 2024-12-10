@@ -135,11 +135,20 @@ const updateImageAndContent = async (
     }
 };
 
+export const updateArticleIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
+    return await Article.findByIdAndUpdate(
+        articleID,
+        { journalIssue: journalIssueID },
+        { new: true }
+    ).exec();
+};
+
 export default {
     saveArticle,
     findArticlesByStatus,
     sumCountAllArticle,
     updateStatusArticle,
     updateArticleReview,
-    updateImageAndContent
+    updateImageAndContent,
+    updateArticleIssue
 }

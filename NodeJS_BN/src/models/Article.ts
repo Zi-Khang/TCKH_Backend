@@ -25,12 +25,12 @@ const articleReviewSchema = new Schema({
     comments: {
         type: String
     }
-}, { _id: false }); 
+}, { _id: false });
 
 const articleSchema = new Schema(
     {
         title: {
-            type: String, 
+            type: String,
             required: true
         },
         abstract: {
@@ -49,6 +49,10 @@ const articleSchema = new Schema(
         contentPublic: {
             type: String,
         },
+        journalIssue: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'JournalIssues'
+        },
         status: {
             type: Number,
             enum: Object.values(EStatusArticle).filter(
@@ -60,7 +64,7 @@ const articleSchema = new Schema(
             ref: 'User'
         },
         publisherID: {
-            type: mongoose.Schema.Types.ObjectId, 
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
         reviews: [articleReviewSchema]

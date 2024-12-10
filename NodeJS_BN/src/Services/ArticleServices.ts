@@ -130,12 +130,30 @@ const updateImageAndContentPublic = async (
     return {
         article: findArticles,
     };
-
 };
+
+
+export const addArticleToIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
+    const updatedArticle = await ArticleRepository.updateArticleIssue(articleID, journalIssueID);
+
+    if (!updatedArticle) {
+        throw new Error('Article or Issue not found');
+    }
+    await ProcessServices.createArticleProccess(
+        articleID,
+        new Date(),
+        'Đã đăng lên tạp chí'
+    );
+    await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.POSTED)
+
+    return updatedArticle;
+};
+
 
 export default {
     newArticle,
     allArticleFilterStatus,
     updateArticleReview,
-    updateImageAndContentPublic
+    updateImageAndContentPublic,
+    addArticleToIssue
 };

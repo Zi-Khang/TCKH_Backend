@@ -15,7 +15,8 @@ export enum EStatusArticle {
     COMPLETE = 5,
     PUBLICING = 6,
     PUBLIC = 7,
-    REJECT = 8,
+    POSTED = 8,
+    REJECT = 9,
 }
 
 export enum EStatusReview {

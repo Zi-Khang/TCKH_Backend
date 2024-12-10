@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from 'express';
 import JournalIssueServices from "../Services/JournalIssueServices";
 import { ObjectId } from 'mongoose';
+import ArticleServices from '../Services/ArticleServices';
 
 
 const createJournalIssue = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -44,7 +45,32 @@ const getIssuesByVolume = async (req: Request, res: Response, next: NextFunction
 };
 
 
+export const assignArticleToIssue = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const { articleID, journalIssueID } = req.body as {
+            articleID: ObjectId,
+            journalIssueID: ObjectId,
+        };
+
+        if (!articleID || !journalIssueID) {
+            return res.status(400).json({ message: 'articleID and journalIssueID are required.' });
+        }
+
+        const updatedArticle = await ArticleServices.addArticleToIssue(
+            articleID, 
+            journalIssueID
+        );
+
+        return res.status(200).json({ message: 'Article assigned to issue successfully', updatedArticle });
+    } catch (error) {
+        console.error('Error assigning article to issue:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
+
+
 export default {
     createJournalIssue,
-    getIssuesByVolume
+    getIssuesByVolume,
+    assignArticleToIssue
 }
