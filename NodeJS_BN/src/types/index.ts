@@ -13,8 +13,9 @@ export enum EStatusArticle {
     REVIEWED = 3,
     REVISIONING = 4,
     COMPLETE = 5,
-    PUBLIC = 6,
-    REJECT = 7,
+    PUBLICING = 6,
+    PUBLIC = 7,
+    REJECT = 8,
 }
 
 export enum EStatusReview {

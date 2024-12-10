@@ -60,10 +60,24 @@ const updateArticlePublicProccess = async (
     const Process = await ProcessRepository.saveProccess(process);
     return Process;
 };
+const updateArticleCreateVolumeProccess = async (
+    managerID?: ObjectId,
+    time?: Date,
+    note?: string,
+) => {
+    const process = {
+        managerID: managerID,
+        time: time,
+        note: note,
+    };
+    const Process = await ProcessRepository.saveProccess(process);
+    return Process;
+};
 
 export default {
     createNewArticleProcess,
     assignReviewerProcess,
     updateArticleReviewProccess,
     updateArticlePublicProccess,
+    updateArticleCreateVolumeProccess
 }
