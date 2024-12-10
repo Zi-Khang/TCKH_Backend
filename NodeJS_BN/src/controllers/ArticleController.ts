@@ -109,14 +109,14 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
 const updateArticleReview = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         console.log(req.body);
-        const { 
+        const {
             articleID,
             round,
             reviewerID,
             decision,
             comments,
-         } = req.body as ReqBodyReview;
-        
+        } = req.body as ReqBodyReview;
+
 
         const contentUrl = req.file ? req.file.path : undefined;
         console.log(contentUrl);
@@ -142,34 +142,86 @@ const updateImageAndContentArticlePublic = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<any> => {
+): Promise<any> => {
     try {
-      const { articleID, publisherID } = req.body as { articleID: ObjectId, publisherID: ObjectId };
-  
-      const files = req.files as {
-        [fieldname: string]: Express.Multer.File[];
-      };
-  
-      const imageUrl = files?.image?.[0]?.path || undefined;
-      const contentUrl = files?.contentPublic?.[0]?.path || undefined;
-  
-      console.log({ imageUrl, contentUrl });
-  
-      const updatedArticle = await ArticleServices.updateImageAndContentPublic(
-        articleID,
-        publisherID,
-        imageUrl,
-        contentUrl,
-      );
-      
-      return res.status(200).json({ message: 'Public Success'});
-    } catch (error) {
-      console.error('Error in updateImageAndContentArticlePublic:', error);
-      return res.status(500).json({ message: 'Internal Server Error', error });
-    }
-  };
-  
+        const { articleID, publisherID } = req.body as { articleID: ObjectId, publisherID: ObjectId };
 
+        const files = req.files as {
+            [fieldname: string]: Express.Multer.File[];
+        };
+
+        const imageUrl = files?.image?.[0]?.path || undefined;
+        const contentUrl = files?.contentPublic?.[0]?.path || undefined;
+
+        console.log({ imageUrl, contentUrl });
+
+        const updatedArticle = await ArticleServices.updateImageAndContentPublic(
+            articleID,
+            publisherID,
+            imageUrl,
+            contentUrl,
+        );
+
+        return res.status(200).json({ message: 'Public Success' });
+    } catch (error) {
+        console.error('Error in updateImageAndContentArticlePublic:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
+
+const decideArticle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { articleID, decision } = req.body as { articleID: ObjectId, decision: EDecision };
+
+
+        const Article = await ArticleServices.decideArticle(
+            articleID,
+            decision,
+        );
+
+        return res.status(200).json({ message: 'Gửi bài thành công' });
+    } catch (error) {
+        console.error('Error in updateImageAndContentArticlePublic:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
+
+const updateArticleFromAuthor = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { articleID } = req.body as { articleID: ObjectId};
+
+        const { title, abstract, keywords } = req.body as ReqBodyArticle;
+
+        if (!articleID) {
+            return res.status(400).json({ message: 'articleID is required.' });
+        }
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+        const contentUrl = req.file.path;
+
+        const updatedArticle = await ArticleServices.editArticle(
+            articleID,
+            title,
+            abstract,
+            contentUrl,
+            keywords,
+        );
+        return updatedArticle;
+
+    } catch (error) {
+        console.error('Error in createArticle:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
 
 
 export default {
@@ -177,5 +229,7 @@ export default {
     getListArticles,
     getMyArticle,
     updateArticleReview,
-    updateImageAndContentArticlePublic
+    updateImageAndContentArticlePublic,
+    decideArticle,
+    updateArticleFromAuthor,
 };

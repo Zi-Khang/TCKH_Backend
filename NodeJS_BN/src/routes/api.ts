@@ -48,4 +48,8 @@ router.post(
   
   router.post('/addArticle', JournalIssues.assignArticleToIssue);
 
+  router.post('/decideArticle', ArticleController.decideArticle);
+  
+  router.post('/updateArticleFromAuthor', ArticleController.updateArticleFromAuthor);
+
 export default router;

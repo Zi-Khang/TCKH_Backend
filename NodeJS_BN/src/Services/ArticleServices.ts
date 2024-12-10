@@ -133,7 +133,7 @@ const updateImageAndContentPublic = async (
 };
 
 
-export const addArticleToIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
+const addArticleToIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
     const updatedArticle = await ArticleRepository.updateArticleIssue(articleID, journalIssueID);
 
     if (!updatedArticle) {
@@ -149,11 +149,71 @@ export const addArticleToIssue = async (articleID:ObjectId, journalIssueID: Obje
     return updatedArticle;
 };
 
+const decideArticle = async (articleID:ObjectId, decision: EDecision) => {
+
+    if (decision == 1){
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.PUBLICING);
+        await ProcessServices.createArticleProccess(
+            articleID,
+            new Date(),
+            'Duyệt thành công, gửi tới nhà xuất bản'
+        );
+    } else if (decision == 2) {
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REVISIONING);
+        await ProcessServices.createArticleProccess(
+            articleID,
+            new Date(),
+            'Cần chỉnh sửa, gửi lại tác giả'
+        );
+    } else if (decision == 3)
+    {
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.REJECT);
+        await ProcessServices.createArticleProccess(
+            articleID,
+            new Date(),
+            'Từ chối bài báo'
+        );
+    }
+
+    return 'Duyệt thành công';
+};
+
+const editArticle = async (
+    articleID:ObjectId, 
+    title: string,
+    abstract: string,
+    contentUrl: string,
+    keywords: string[],
+) => {
+    const updatedArticle = await ArticleRepository.updateArticle(
+        articleID, 
+        title,
+        abstract,
+        contentUrl,
+        keywords,
+    );
+    if (updatedArticle) {
+        await ProcessServices.createArticleProccess(
+            articleID,
+            new Date(),
+            'Đã chỉnh sửa'
+        );
+        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.COMPLETE)
+    }
+    if (!updatedArticle) {
+        throw new Error('Article not found');
+    }
+
+    return updatedArticle;
+};
+
 
 export default {
     newArticle,
     allArticleFilterStatus,
     updateArticleReview,
     updateImageAndContentPublic,
-    addArticleToIssue
+    addArticleToIssue,
+    decideArticle,
+    editArticle
 };

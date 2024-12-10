@@ -135,13 +135,35 @@ const updateImageAndContent = async (
     }
 };
 
-export const updateArticleIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
+const updateArticleIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
     return await Article.findByIdAndUpdate(
         articleID,
         { journalIssue: journalIssueID },
         { new: true }
     ).exec();
 };
+
+
+const updateArticle = async (
+    articleID:ObjectId, 
+    title: string,
+    abstract: string,
+    contentUrl: string,
+    keywords: string[],
+) => {
+    return await Article.findByIdAndUpdate(
+        articleID,
+        { $set: {
+            title: title,
+            abstract: abstract,
+            content:contentUrl ,
+            keywords: keywords,
+        }
+        },
+        { new: true, runValidators: true }
+    ).exec();
+};
+
 
 export default {
     saveArticle,
@@ -150,5 +172,6 @@ export default {
     updateStatusArticle,
     updateArticleReview,
     updateImageAndContent,
-    updateArticleIssue
+    updateArticleIssue,
+    updateArticle
 }
