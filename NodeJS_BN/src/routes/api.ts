@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import upload from '../configs/cloudinary'; 
 import { UserController, ArticleController, ReviewAssignments } from "../controllers";
 import VolumeController from "../controllers/VolumeController";
+import JournalIssues from "../controllers/JournalIssues";
 
 const router = Router();
 
@@ -41,5 +42,8 @@ router.post(
 
   router.get('/getVolumeList', VolumeController.getVolumeList);
 
+  router.post('/createIssue', JournalIssues.createJournalIssue);
+
+  router.post('/getIssueList', JournalIssues.getIssuesByVolume);
 
 export default router;
