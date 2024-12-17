@@ -52,4 +52,6 @@ router.post(
   
   router.post('/updateArticleFromAuthor', upload.single('content'), ArticleController.updateArticleFromAuthor);
 
+  router.post('/updateUserProfile', UserController.updateUserProfile);
+  
 export default router;

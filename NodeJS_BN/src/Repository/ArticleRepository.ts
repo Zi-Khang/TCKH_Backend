@@ -126,7 +126,9 @@ const updateImageAndContent = async (
                 contentPublic: contentUrl,
                 publisherID: publisherID,
             },
-            { new: true } 
+            { 
+                new: true 
+            } 
         );
 
         return article;

@@ -1,4 +1,6 @@
+import { ObjectId } from "mongoose";
 import User from "../models/User";
+import UserRepository from "../Repository/UserRepository";
 const { name } = require('ejs');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
@@ -93,8 +95,23 @@ const loginServices = async (
     }
 }
 
+const updateProfile = async (
+    userID: ObjectId,
+    name: string, 
+) => {
+    try {
+        const updateProfile = await UserRepository.updateUser(userID, name);
+        
+        return updateProfile;
+    } catch (error) {
+        console.log('Error in createUser:', error);
+        return error;
+    }
+};
+
 
 export default {
     createUserServices,
     loginServices,
+    updateProfile
 }
