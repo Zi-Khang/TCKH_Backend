@@ -54,4 +54,8 @@ router.post(
 
   router.post('/updateUserProfile', UserController.updateUserProfile);
   
+  router.get('/getListUsers', UserController.getListUsers);
+  
+  router.post('/addRoleUsers', UserController.updateRole);
+
 export default router;

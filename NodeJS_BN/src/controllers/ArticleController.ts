@@ -130,15 +130,17 @@ const updateArticleReview = async (req: Request, res: Response, next: NextFuncti
             comments,
         } = req.body as ReqBodyReview;
 
-        const contentUrl = undefined;
+        let contentUrl: string | undefined;
+
         if (decision == 2) {
             if (!req.file) {
                 return res.status(400).json({ message: 'Send failed because file not found, please try again ^^' });
             }
-            contentUrl === req.file.path;
-        }
-        
-
+            contentUrl = req.file.path;
+            console.log(contentUrl);
+        } else {
+            contentUrl = undefined;
+        }        
 
         const newArticle = await ArticleServices.updateArticleReview(
             articleID,
@@ -188,7 +190,9 @@ const updateImageAndContentArticlePublic = async (
 
         const imageUrl = files?.image?.[0]?.path;
         const contentUrl = files?.contentPublic?.[0]?.path;
-
+        console.log(imageUrl);
+        console.log(contentUrl);
+        
         const updatedArticle = await ArticleServices.updateImageAndContentPublic(
             articleID,
             publisherID,
@@ -237,7 +241,6 @@ const updateArticleFromAuthor = async (
     next: NextFunction
 ): Promise<any> => {
     try {
-
         
         const { articleID, title, abstract, keywords } = req.body as {
             articleID: ObjectId,

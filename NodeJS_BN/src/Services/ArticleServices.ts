@@ -126,6 +126,8 @@ const updateImageAndContentPublic = async (
             'Đã xuất bản'
         );
         await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.PUBLIC)
+    } else {
+        return false;
     }
     return {
         article: findArticles,
