@@ -21,15 +21,19 @@ interface ReqBodyReview {
 
 const createArticle = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-
+        console.log(req.body);
         const { title, abstract, keywords, authorID } = req.body as ReqBodyArticle;
 
+        
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
-        if (!title || !abstract || !keywords || authorID) {
+        if (!title || !abstract || !keywords || !authorID) {
+            console.log(title,abstract,keywords,authorID);
+            
             return res.status(400).json({ message: 'Please fill in the information completely'})
         }
+
 
         const contentUrl = req.file.path;
 
