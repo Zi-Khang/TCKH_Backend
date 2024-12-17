@@ -54,7 +54,7 @@ const findArticlesByStatus = async (
         .find(filter)
         .skip(skip)
         .limit(limit)
-        .select("-keywords -reviews")
+        .select("-keywords")
         .populate({
             path: "authorID",
             select: "name"
