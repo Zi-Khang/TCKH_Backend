@@ -151,6 +151,8 @@ const addArticleToIssue = async (articleID:ObjectId, journalIssueID: ObjectId) =
 
 const decideArticle = async (articleID:ObjectId, decision: EDecision) => {
 
+    console.log(articleID, decision);
+    
     if (decision == 1){
         await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.PUBLICING);
         await ProcessServices.createArticleProccess(
@@ -185,26 +187,33 @@ const editArticle = async (
     contentUrl: string,
     keywords: string[],
 ) => {
-    const updatedArticle = await ArticleRepository.updateArticle(
-        articleID, 
-        title,
-        abstract,
-        contentUrl,
-        keywords,
-    );
-    if (updatedArticle) {
-        await ProcessServices.createArticleProccess(
-            articleID,
-            new Date(),
-            'Đã chỉnh sửa'
+    try {
+        const updatedArticle = await ArticleRepository.updateArticle(
+            articleID, 
+            title,
+            abstract,
+            contentUrl,
+            keywords,
         );
-        await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.COMPLETE)
+        if (updatedArticle) {
+            await ProcessServices.createArticleProccess(
+                articleID,
+                new Date(),
+                'Đã chỉnh sửa'
+            );
+            const updateStatus = await ArticleRepository.updateStatusArticle(articleID, EStatusArticle.COMPLETE)
+            console.log(updateStatus);
+        }
+        if (!updatedArticle) {
+            throw new Error('Article not found');
+        }
+    
+        return updatedArticle;
+    } catch (error) {
+        console.log(error);
+        return error;
     }
-    if (!updatedArticle) {
-        throw new Error('Article not found');
-    }
-
-    return updatedArticle;
+    
 };
 
 

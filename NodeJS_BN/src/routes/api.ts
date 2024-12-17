@@ -50,6 +50,6 @@ router.post(
 
   router.post('/decideArticle', ArticleController.decideArticle);
   
-  router.post('/updateArticleFromAuthor', ArticleController.updateArticleFromAuthor);
+  router.post('/updateArticleFromAuthor', upload.single('content'), ArticleController.updateArticleFromAuthor);
 
 export default router;

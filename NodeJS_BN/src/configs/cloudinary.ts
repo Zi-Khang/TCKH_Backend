@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    // Lấy phần mở rộng từ file gốc
+    
     const extension = file.originalname.split('.').pop()?.toLowerCase() || 'unknown';
     
     return {

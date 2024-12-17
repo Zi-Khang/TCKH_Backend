@@ -21,13 +21,16 @@ interface ReqBodyReview {
 
 const createArticle = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-        console.log(req.body);
+
         const { title, abstract, keywords, authorID } = req.body as ReqBodyArticle;
 
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
-        console.log(req.file.path);
+        if (!title || !abstract || !keywords || authorID) {
+            return res.status(400).json({ message: 'Please fill in the information completely'})
+        }
+
         const contentUrl = req.file.path;
 
         // Tạo bài báo mới
@@ -47,6 +50,8 @@ const createArticle = async (req: Request, res: Response, next: NextFunction): P
                 new Date(),
                 'Gửi bài báo'
             );
+        } else {
+            return res.status(400).json({ message: 'Send article failed, please try again'})
         }
 
         return res.status(200).json(saveArticle);
@@ -87,7 +92,9 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
             authorID?: ObjectId,
             status?: EStatusArticle;
         };
-        console.log(req.query);
+        if (!authorID) {
+            return res.status(400).json({ message: 'authorID is required'})
+        }
 
         const pageNumber = page || 1;
         const pageSize = limit || 10;
@@ -97,10 +104,12 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
             authorID: authorID,
             status: status,
         });
+
         return res.status(200).json({
             articles: find.articles,
             counts: find.counts,
         });
+
     } catch (error) {
         return res.status(500).json({ message: error });
     }
@@ -108,7 +117,7 @@ const getMyArticle = async (req: Request, res: Response, next: NextFunction): Pr
 
 const updateArticleReview = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-        console.log(req.body);
+
         const {
             articleID,
             round,
@@ -117,9 +126,14 @@ const updateArticleReview = async (req: Request, res: Response, next: NextFuncti
             comments,
         } = req.body as ReqBodyReview;
 
-
-        const contentUrl = req.file ? req.file.path : undefined;
-        console.log(contentUrl);
+        const contentUrl = undefined;
+        if (decision == 2) {
+            if (!req.file) {
+                return res.status(400).json({ message: 'Send failed because file not found, please try again ^^' });
+            }
+            contentUrl === req.file.path;
+        }
+        
 
 
         const newArticle = await ArticleServices.updateArticleReview(
@@ -130,8 +144,12 @@ const updateArticleReview = async (req: Request, res: Response, next: NextFuncti
             contentUrl,
             comments,
         );
+        if (!newArticle) {
+            return res.status(400).json({ message: 'Send failed, please try again ^^' });
+        }
 
         return res.status(200).json('Phản biện thành công');
+
     } catch (error) {
         console.error('Error in createArticle:', error);
         return res.status(500).json({ message: 'Internal Server Error', error });
@@ -144,16 +162,28 @@ const updateImageAndContentArticlePublic = async (
     next: NextFunction
 ): Promise<any> => {
     try {
-        const { articleID, publisherID } = req.body as { articleID: ObjectId, publisherID: ObjectId };
+        const { 
+            articleID, 
+            publisherID 
+        } = req.body as 
+        { 
+            articleID: ObjectId,
+            publisherID: ObjectId 
+        };
+
+        if (!articleID || !publisherID) {
+            return res.status(400).json({ message: 'articleID or publisherID is required' });
+        }
+        if (!req.files) {
+            return res.status(400).json({ message: 'No files uploaded' });
+        }
 
         const files = req.files as {
             [fieldname: string]: Express.Multer.File[];
         };
 
-        const imageUrl = files?.image?.[0]?.path || undefined;
-        const contentUrl = files?.contentPublic?.[0]?.path || undefined;
-
-        console.log({ imageUrl, contentUrl });
+        const imageUrl = files?.image?.[0]?.path;
+        const contentUrl = files?.contentPublic?.[0]?.path;
 
         const updatedArticle = await ArticleServices.updateImageAndContentPublic(
             articleID,
@@ -161,6 +191,10 @@ const updateImageAndContentArticlePublic = async (
             imageUrl,
             contentUrl,
         );
+        if (!updatedArticle)
+        {
+            return res.status(400).json({ message: 'Upload failed, please try again' });
+        }
 
         return res.status(200).json({ message: 'Public Success' });
     } catch (error) {
@@ -177,11 +211,14 @@ const decideArticle = async (
     try {
         const { articleID, decision } = req.body as { articleID: ObjectId, decision: EDecision };
 
-
+        console.log(req.body);
+        
         const Article = await ArticleServices.decideArticle(
             articleID,
             decision,
         );
+        console.log(Article);
+        
 
         return res.status(200).json({ message: 'Gửi bài thành công' });
     } catch (error) {
@@ -196,9 +233,15 @@ const updateArticleFromAuthor = async (
     next: NextFunction
 ): Promise<any> => {
     try {
-        const { articleID } = req.body as { articleID: ObjectId};
 
-        const { title, abstract, keywords } = req.body as ReqBodyArticle;
+        
+        const { articleID, title, abstract, keywords } = req.body as {
+            articleID: ObjectId,
+            title: string,
+            abstract: string,
+            keywords: string[]
+        }
+        console.log(articleID);
 
         if (!articleID) {
             return res.status(400).json({ message: 'articleID is required.' });
@@ -215,7 +258,7 @@ const updateArticleFromAuthor = async (
             contentUrl,
             keywords,
         );
-        return updatedArticle;
+        return res.status(200).json({ message: 'Chỉnh sửa thành công', updatedArticle })
 
     } catch (error) {
         console.error('Error in createArticle:', error);
