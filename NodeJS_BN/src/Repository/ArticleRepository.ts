@@ -93,8 +93,8 @@ const updateArticleReview = async (
             round,
             reviewerID,
             contentReview: contentUrl,
-            decision,
-            comments,
+            decision: decision,
+            comments: comments,
         };
 
         const article = Article.findByIdAndUpdate(

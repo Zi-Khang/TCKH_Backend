@@ -129,7 +129,7 @@ const updateArticleReview = async (req: Request, res: Response, next: NextFuncti
             decision,
             comments,
         } = req.body as ReqBodyReview;
-
+        
         let contentUrl: string | undefined;
 
         if (decision == 2) {
