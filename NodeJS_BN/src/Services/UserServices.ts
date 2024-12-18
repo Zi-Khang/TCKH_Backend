@@ -98,10 +98,11 @@ const loginServices = async (
 const updateProfile = async (
     userID: ObjectId,
     name: string, 
+    email: string,
 ) => {
     try {
-        const updateProfile = await UserRepository.updateUser(userID, name);
-        
+        const updateProfile = await UserRepository.updateUser(userID, name, email);
+
         return updateProfile;
     } catch (error) {
         console.log('Error in createUser:', error);

@@ -40,11 +40,14 @@ const getListUsers = async (
     };
 };
 
-const updateUser = async (userID: ObjectId, name: string) => {
+const updateUser = async (userID: ObjectId, name: string, email: string) => {
     const user = User.findByIdAndUpdate(
         userID,
         {
-            $set: { name: name },
+            $set: { 
+                name: name,
+                email: email,
+            },
         },
         { new: true }
     )

@@ -37,9 +37,10 @@ const updateUserProfile = async (req: Request, res: Response, next: NextFunction
     try {
         console.log("Check: ", req.body);
 
-        const { userID, name } = req.body as {
+        const { userID, name, email } = req.body as {
             userID: ObjectId,
             name: string,
+            email: string,
         };
 
         if (!userID) {
@@ -48,8 +49,11 @@ const updateUserProfile = async (req: Request, res: Response, next: NextFunction
         if (!name) {
             return res.status(400).json('Name is required')
         }
+        if (!email) {
+            return res.status(400).json('Name is required')
+        }
 
-        const result = await UserService.updateProfile(userID, name);
+        const result = await UserService.updateProfile(userID, name, email);
 
         if (result) {
             return res.status(200).json({ message: 'Update user success', result });
