@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 import Article from "../models/Article";
-import { EDecision, EStatusArticle, EStatusReview } from "../types";
+import { EDecision, EField, EStatusArticle, EStatusReview } from "../types";
 
 
 const saveArticle = async (article: Object) => {
@@ -114,6 +114,7 @@ const updateArticleReview = async (
 const updateImageAndContent = async (
     articleID: ObjectId,
     publisherID: ObjectId,
+    field: EField,
     imageUrl?: string,
     contentUrl?: string,
 ) => {
@@ -122,6 +123,7 @@ const updateImageAndContent = async (
         const article = Article.findByIdAndUpdate(
             articleID,
             {
+                field: field,
                 image: imageUrl,
                 contentPublic: contentUrl,
                 publisherID: publisherID,

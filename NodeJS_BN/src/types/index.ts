@@ -49,3 +49,13 @@ export enum EDecision {
     REJECT = 2,
 }
 
+export enum EField {
+    Natural_Science = 1,
+    Science_And_Technology = 2,
+    Medical_And_Health_Sciences = 3,
+    Social_Sciences_And_Humanities = 4,
+    Mathematics_And_Statistics = 5,
+    Agricultural_And_Food_Science = 6,
+    Science_Education = 7,
+}
+

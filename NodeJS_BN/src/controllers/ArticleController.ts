@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import ArticleServices from '../Services/ArticleServices';
 import ArticleRepository from '../Repository/ArticleRepository';
 import ProcessServices from '../Services/ProcessServices';
-import { EDecision, EStatusArticle, EStatusReview } from '../types';
+import { EDecision, EField, EStatusArticle, EStatusReview } from '../types';
 
 interface ReqBodyArticle {
     title: string;
@@ -170,11 +170,13 @@ const updateImageAndContentArticlePublic = async (
     try {
         const { 
             articleID, 
-            publisherID 
+            publisherID,
+            field,
         } = req.body as 
         { 
             articleID: ObjectId,
-            publisherID: ObjectId 
+            publisherID: ObjectId,
+            field: EField,
         };
 
         if (!articleID || !publisherID) {
@@ -182,6 +184,9 @@ const updateImageAndContentArticlePublic = async (
         }
         if (!req.files) {
             return res.status(400).json({ message: 'No files uploaded' });
+        }
+        if (!field) {
+            return res.status(400).json({ message: 'field is required' });
         }
 
         const files = req.files as {
@@ -196,6 +201,7 @@ const updateImageAndContentArticlePublic = async (
         const updatedArticle = await ArticleServices.updateImageAndContentPublic(
             articleID,
             publisherID,
+            field,
             imageUrl,
             contentUrl,
         );

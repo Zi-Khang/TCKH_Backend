@@ -43,6 +43,9 @@ const articleSchema = new Schema(
         keywords: {
             type: [String],
         },
+        field: {
+            type: String,
+        },
         image: {
             type: String,
         },

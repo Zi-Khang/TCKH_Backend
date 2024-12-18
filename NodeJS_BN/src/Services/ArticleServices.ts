@@ -1,5 +1,5 @@
 import { ObjectId, Types } from "mongoose";
-import { EAssigment, EDecision, EStatusArticle, EStatusReview } from "../types";
+import { EAssigment, EDecision, EField, EStatusArticle, EStatusReview } from "../types";
 import ArticleRepository from "../Repository/ArticleRepository";
 import ProcessServices from "./ProcessServices";
 import ReviewAssignmentRepository from "../Repository/ReviewAssignmentRepository";
@@ -109,12 +109,14 @@ const updateArticleReview = async (
 const updateImageAndContentPublic = async (
     articleID: ObjectId,
     publisherID: ObjectId,
+    field: EField,
     imageUrl?: string,
     contentUrl?: string,
 ) => {
     const findArticles = await ArticleRepository.updateImageAndContent(
         articleID,
         publisherID,
+        field,
         imageUrl,
         contentUrl,
     );
