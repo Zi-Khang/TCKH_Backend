@@ -279,6 +279,71 @@ const updateArticleFromAuthor = async (
     }
 };
 
+const rateArticle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { 
+            articleID, 
+            assessorId, 
+            rate
+        } = req.body as {
+            articleID: ObjectId,
+            assessorId: ObjectId,
+            rate: number,
+        }
+        if (!articleID) {
+            return res.status(400).json({ message: 'articleID is required.' });
+        }
+        if (!assessorId) {
+            return res.status(400).json({ message: 'assessorId is required.' });
+        }
+        if (!rate) {
+            return res.status(400).json({ message: 'rate is required.' });
+        }
+
+        const rateArticles = await ArticleServices.rateArticle(articleID, assessorId, rate)
+        if (rateArticles) {
+            return res.status(200).json({ message: 'Rate successfull', rateArticles });
+        }
+    } catch (error) {
+        console.error('Error in createArticle:', error);
+        return res.status(500).json({ message: 'Internal Server Error', error });
+    }
+};
+
+const getRateArticle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { 
+            articleID
+        } = req.body as 
+        { 
+            articleID: ObjectId 
+        };
+
+        if (!articleID) {
+            return res.status(400).json({ message: "articleID is required." });
+        }
+
+        const averageRate = await ArticleServices.getRateArticle(articleID);
+
+        return res.status(200).json({
+            message: "Successfully fetched the article's rate.",
+            data: averageRate,
+        });
+    } catch (error) {
+        console.error("Error in getRateArticle Controller:", error);
+        return res.status(500).json({ message: "Internal Server Error", error });
+    }
+};
+
+
 
 export default {
     createArticle,
@@ -288,4 +353,6 @@ export default {
     updateImageAndContentArticlePublic,
     decideArticle,
     updateArticleFromAuthor,
+    rateArticle,
+    getRateArticle
 };

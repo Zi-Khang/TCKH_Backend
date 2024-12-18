@@ -1,6 +1,7 @@
-import { ObjectId } from "mongoose";
+import mongoose, {Types, ObjectId } from "mongoose";
 import Article from "../models/Article";
 import { EDecision, EField, EStatusArticle, EStatusReview } from "../types";
+import ArticleReview from "../models/ArticleReview";
 
 
 const saveArticle = async (article: Object) => {
@@ -100,9 +101,9 @@ const updateArticleReview = async (
         const article = Article.findByIdAndUpdate(
             articleID,
             {
-                $push: { reviews: review }, 
+                $push: { reviews: review },
             },
-            { new: true } 
+            { new: true }
         );
 
         return article;
@@ -119,7 +120,6 @@ const updateImageAndContent = async (
     contentUrl?: string,
 ) => {
     try {
-
         const article = Article.findByIdAndUpdate(
             articleID,
             {
@@ -128,9 +128,9 @@ const updateImageAndContent = async (
                 contentPublic: contentUrl,
                 publisherID: publisherID,
             },
-            { 
-                new: true 
-            } 
+            {
+                new: true
+            }
         );
 
         return article;
@@ -139,7 +139,7 @@ const updateImageAndContent = async (
     }
 };
 
-const updateArticleIssue = async (articleID:ObjectId, journalIssueID: ObjectId) => {
+const updateArticleIssue = async (articleID: ObjectId, journalIssueID: ObjectId) => {
     return await Article.findByIdAndUpdate(
         articleID,
         { journalIssue: journalIssueID },
@@ -149,7 +149,7 @@ const updateArticleIssue = async (articleID:ObjectId, journalIssueID: ObjectId) 
 
 
 const updateArticle = async (
-    articleID:ObjectId, 
+    articleID: ObjectId,
     title: string,
     abstract: string,
     contentUrl: string,
@@ -157,16 +157,59 @@ const updateArticle = async (
 ) => {
     return await Article.findByIdAndUpdate(
         articleID,
-        { $set: {
-            title: title,
-            abstract: abstract,
-            content:contentUrl ,
-            keywords: keywords,
-        }
+        {
+            $set: {
+                title: title,
+                abstract: abstract,
+                content: contentUrl,
+                keywords: keywords,
+            }
         },
         { new: true, runValidators: true }
     ).exec();
 };
+
+const rate = async (
+    articleID: ObjectId,
+    assessorId: ObjectId,
+    rate: number
+) => {
+    const createRate = await ArticleReview.create({ articleID, assessorId, rate });
+    return createRate;
+};
+
+
+const getRate = async (articleID: string | ObjectId) => {
+    const objectIdArticleID =
+        typeof articleID === "string"
+            ? new mongoose.Types.ObjectId(articleID)
+            : articleID;
+
+    console.log("Converted articleID:", objectIdArticleID);
+
+    const result = await ArticleReview.aggregate([
+        {
+            $match: {
+                articleID: objectIdArticleID, 
+            },
+        },
+        {
+            $group: {
+                _id: "$articleID",
+                averageRate: { $avg: "$rate" },
+            },
+        },
+    ]);
+
+    console.log("Aggregation result:", result);
+
+    if (result.length === 0) {
+        return 0; 
+    }
+
+    return Math.ceil(result[0].averageRate); 
+};
+
 
 
 export default {
@@ -177,5 +220,7 @@ export default {
     updateArticleReview,
     updateImageAndContent,
     updateArticleIssue,
-    updateArticle
+    updateArticle,
+    rate,
+    getRate
 }

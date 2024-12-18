@@ -58,4 +58,8 @@ router.post(
   
   router.post('/addRoleUsers', UserController.updateRole);
 
+  router.post('/rateArticle', ArticleController.rateArticle);
+  
+  router.post('/getRateArticle', ArticleController.getRateArticle);
+
 export default router;

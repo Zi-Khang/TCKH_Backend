@@ -220,6 +220,38 @@ const editArticle = async (
     
 };
 
+const rateArticle = async (
+    articleID: ObjectId,
+    assessorId: ObjectId,
+    rate: number
+) => {
+    try {
+        const rateArticle = await ArticleRepository.rate(
+            articleID, 
+            assessorId,
+            rate
+        );
+        return rateArticle;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+    
+};
+
+const getRateArticle = async (
+    articleID: ObjectId
+) => {
+    try {
+        const averageRate = await ArticleRepository.getRate(articleID);
+
+        return averageRate;
+    } catch (error) {
+        console.error("Error in getRateArticle Service:", error);
+        throw new Error("Unable to get the article's rate.");
+    }
+};
+
 
 export default {
     newArticle,
@@ -228,5 +260,7 @@ export default {
     updateImageAndContentPublic,
     addArticleToIssue,
     decideArticle,
-    editArticle
+    editArticle,
+    rateArticle,
+    getRateArticle
 };

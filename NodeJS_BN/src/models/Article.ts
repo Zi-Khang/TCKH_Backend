@@ -44,7 +44,10 @@ const articleSchema = new Schema(
             type: [String],
         },
         field: {
-            type: String,
+            type: Number,
+            enum: Object.values(EStatusArticle).filter(
+                (value) => typeof value === "number"
+            ),
         },
         image: {
             type: String,

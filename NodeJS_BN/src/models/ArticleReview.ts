@@ -7,47 +7,18 @@ const articleReviewSchema = new Schema({
     {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Article',
-        required: true
+        require: true,
     },
-    round:
-    {
-        type: Number,
-        required: true,
-        default: 1,
-    },
-    reviewerID:
-    {
+    assessorId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
     },
-    editorID:
-    {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    contentArticleName:
-    {
-        type: String
-    },
-    contentReviewName:
-    {
-        type: String
-    },
-    status:
-    {
+    rate: {
         type: Number,
-        enum: Object.values(EStatusReview).filter(
-            (value) => typeof value === "number"
-        ),
-    },
-    decision:
-    {
-        type: String
-    },
-    comments:
-    {
-        type: String
+        require: true
     }
+
 },
     configSchema
 );
